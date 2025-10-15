@@ -1,3 +1,12 @@
+### Disclaimer 
+
+Personal fork to add better worktree features
+
+```
+go install github.com/rasibn/lazygit@latest
+```
+---
+
 <div align="center">
 <sup>Special thanks to:</sup>
 <br>

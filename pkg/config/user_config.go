@@ -313,6 +313,8 @@ type GitConfig struct {
 	RemoteBranchSortOrder string `yaml:"remoteBranchSortOrder" jsonschema:"enum=date,enum=alphabetical"`
 	// When copying commit hashes to the clipboard, truncate them to this length. Set to 40 to disable truncation.
 	TruncateCopiedCommitHashesTo int `yaml:"truncateCopiedCommitHashesTo"`
+	// Default path pattern for new worktrees. Can contain placeholders {{repoName}} and {{branchName}}. If empty, you'll be prompted for the path. Example: "../{{repoName}}.{{branchName}}"
+	WorktreePathPattern string `yaml:"worktreePathPattern" jsonschema:"example=../{{repoName}}.{{branchName}}"`
 }
 
 type PagerType string

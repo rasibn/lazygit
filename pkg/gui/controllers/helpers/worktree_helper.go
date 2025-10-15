@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"path/filepath"
 	"strings"
 
 	"github.com/jesseduffield/gocui"
@@ -111,8 +112,15 @@ func (self *WorktreeHelper) NewWorktreeCheckout(base string, canCheckoutBase boo
 		})
 	}
 
+	pathPattern := self.c.UserConfig().Git.WorktreePathPattern
+	initialPath := ""
+	if pathPattern != "" {
+		initialPath = self.generateWorktreePath(pathPattern, base)
+	}
+
 	self.c.Prompt(types.PromptOpts{
-		Title: self.c.Tr.NewWorktreePath,
+		Title:          self.c.Tr.NewWorktreePath,
+		InitialContent: initialPath,
 		HandleConfirm: func(path string) error {
 			opts.Path = path
 
@@ -154,6 +162,17 @@ func (self *WorktreeHelper) NewWorktreeCheckout(base string, canCheckoutBase boo
 	})
 
 	return nil
+}
+
+func (self *WorktreeHelper) generateWorktreePath(pattern string, branchName string) string {
+	repoName := filepath.Base(self.c.Git().RepoPaths.WorktreePath())
+	sanitizedBranch := utils.SanitizeFilename(branchName)
+
+	result := pattern
+	result = strings.ReplaceAll(result, "{{repoName}}", repoName)
+	result = strings.ReplaceAll(result, "{{branchName}}", sanitizedBranch)
+
+	return result
 }
 
 func (self *WorktreeHelper) Switch(worktree *models.Worktree, contextKey types.ContextKey) error {

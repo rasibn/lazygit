@@ -96,3 +96,13 @@ func FilePath(skip int) string {
 	_, path, _, _ := runtime.Caller(skip)
 	return path
 }
+
+func SanitizeFilename(filename string) string {
+	invalidChars := regexp.MustCompile(`[<>:"/\\|?*\x00-\x1f]`)
+	sanitized := invalidChars.ReplaceAllString(filename, "-")
+	sanitized = strings.TrimSpace(sanitized)
+	if sanitized == "" {
+		return "unnamed"
+	}
+	return sanitized
+}
